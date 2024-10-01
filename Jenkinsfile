@@ -58,7 +58,7 @@ pipeline {
             steps {
                 script {
                     echo '*** Deploying Changes to Strach Org***'
-                    rc = sh returnStatus: true, script: "${toolbelt}/sf project deploy start --target-org ${SCRATCH_NAME}"
+                    rc = sh returnStatus: true, script: "${toolbelt} project deploy start --target-org ${SCRATCH_NAME}"
                     if (rc != 0) {
                         error 'Salesforce push to test scratch org failed.'
                     }
@@ -69,7 +69,7 @@ pipeline {
             steps {
                 script {
                     echo '*** Deleting Strach Org***'
-                    rc = sh returnStatus: true, script: "${toolbelt}/sf org delete scratch --target-org ${SCRATCH_NAME} --no-prompt"
+                    rc = sh returnStatus: true, script: "${toolbelt} org delete scratch --target-org ${SCRATCH_NAME} --no-prompt"
                     if (rc != 0) {
                         error 'Salesforce test scratch org deletion failed.'
                     }
