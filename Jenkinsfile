@@ -26,15 +26,14 @@ pipeline {
                     script {
                         rc = sh returnStatus: true, script: "${toolbelt} auth:jwt:grant -i ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} -f ${jwt_key_file} -r ${SFDC_HOST} -d"
                         if (rc != 0) { 
-                            println 'inside rc 0'
+                            println 'Return code not 0'
                             error 'hub org authorization failed' 
                         }
                         else {
-                            println 'rc not 0'
+                            println 'Return code equals 0'
                         }
                         print 'rc value:'
                         println rc
-		
                     }
                 }
             }
