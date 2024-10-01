@@ -43,16 +43,37 @@ pipeline {
                 }
             }
         }
-
         stage('Display Test Scratch Org') {
             steps {
                 script {
                     echo '*** Printing Scratch Org Info ***'
-                    c = sh returnStatus: true, script: "${toolbelt} org display --target-org ${SCRATCH_NAME}"
+                    rc = sh returnStatus: true, script: "${toolbelt} org display --target-org ${SCRATCH_NAME}"
                     if (rc != 0) {
                         error 'Salesforce test scratch org display failed.'
                     }
-                } 
+                }
+            }
+        }
+        stage('Push Branch Changes To Test Scratch Org') {
+            steps {
+                script {
+                    echo '*** Deploying Changes to Strach Org***'
+                    rc = sh returnStatus: true, script: "${toolbelt}/sf project deploy start --target-org ${SCRATCH_NAME}"
+                    if (rc != 0) {
+                        error 'Salesforce push to test scratch org failed.'
+                    }
+                }
+            }
+        }
+        stage('Delete Test Scratch Org') {
+            steps {
+                script {
+                    echo '*** Deleting Strach Org***'
+                    rc = sh returnStatus: true, script: "${toolbelt}/sf org delete scratch --target-org ${SCRATCH_NAME} --no-prompt"
+                    if (rc != 0) {
+                        error 'Salesforce test scratch org deletion failed.'
+                    }
+                }
             }
         }
     }
