@@ -5,6 +5,7 @@ pipeline {
         SFDC_HOST = "${env.SFDC_HOST_DH}"
         JWT_KEY_CRED_ID = "${env.JWT_CRED_ID_DH}"
         CONNECTED_APP_CONSUMER_KEY = "${env.CONNECTED_APP_CONSUMER_KEY_DH}"
+        toolbelt = tool 'sf_cli'    
     }
     stages {
         stage("List variables") {
@@ -18,7 +19,7 @@ pipeline {
                     """
             }
         }
-        stage("List variables") {
+        stage("Authorize org") {
             steps {
                 withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
                     echo "*** Authorizing hub org ***"
