@@ -32,6 +32,11 @@ pipeline {
                 }
             }
         }
-        
+        stage('Create Test Scratch Org') {
+                rc = command "${toolbelt} org create scratch --target-dev-hub HubOrg --set-default --definition-file config/project-scratch-def.json --alias testScratch --wait 10 --duration-days 1"
+                if (rc != 0) {
+                    error 'Salesforce test scratch org creation failed.'
+                }
+            }
     }
 }
