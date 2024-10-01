@@ -16,7 +16,6 @@ pipeline {
                         echo "JWT_KEY_CRED_ID: $JWT_KEY_CRED_ID"
                         echo "CONNECTED_APP_CONSUMER_KEY: $CONNECTED_APP_CONSUMER_KEY"
                     """
-                }
             }
         }
     }
