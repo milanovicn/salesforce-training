@@ -1,10 +1,10 @@
 pipeline {
     agent any
     environment {
-        HUB_ORG = ${env.HUB_ORG_DH}
-        SFDC_HOST = ${env.SFDC_HOST_DH}
-        JWT_KEY_CRED_ID = ${env.JWT_CRED_ID_DH}
-        CONNECTED_APP_CONSUMER_KEY = ${env.CONNECTED_APP_CONSUMER_KEY_DH}
+        HUB_ORG = "${env.HUB_ORG_DH}"
+        SFDC_HOST = "${env.SFDC_HOST_DH}"
+        JWT_KEY_CRED_ID = "${env.JWT_CRED_ID_DH}"
+        CONNECTED_APP_CONSUMER_KEY = "${env.CONNECTED_APP_CONSUMER_KEY_DH}"
     }
     stages {
         stage("List variables") {
