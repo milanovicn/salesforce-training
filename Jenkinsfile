@@ -21,21 +21,20 @@ pipeline {
                     """
             }
         }
-        stage("Authorize org") {
+        stage('Authorize org') {
             steps {
-                //withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
-                    echo "*** Authorizing hub org ***"
-                    script {
-                        rc = sh returnStatus: true, script: "${toolbelt} org login jwt --client-id ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwt-key-file ${JWT_KEY_CRED_ID} --instance-url ${SFDC_HOST}  --set-default-dev-hub"
-                        if (rc != 0) {
-                            error 'Salesforce dev hub org authorization failed.'
-                        }
+                echo '*** Authorizing hub org ***'
+                script {
+                    rc = sh returnStatus: true, script: "${toolbelt} org login jwt --client-id ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwt-key-file ${JWT_KEY_CRED_ID} --instance-url ${SFDC_HOST}  --set-default-dev-hub"
+                    if (rc != 0) {
+                        error 'Salesforce dev hub org authorization failed.'
                     }
-                //}
+                }
             }
         }
         stage('Create Test Scratch Org') {
             steps {
+                echo '*** Creating New Scratch Org ***'
                 script {
                     rc = sh returnStatus: true, script: "${toolbelt} org create scratch --target-dev-hub ${HUB_ORG}  --set-default --definition-file config/project-scratch-def.json --alias ${SCRATCH_NAME} --wait 10 --duration-days 1"
                     if (rc != 0) {
@@ -48,7 +47,8 @@ pipeline {
         stage('Display Test Scratch Org') {
             steps {
                 script {
-                    rc = command "${toolbelt} org display --target-org ${SCRATCH_NAME}"
+                    echo '*** Printing Scratch Org Info ***'
+                    c = sh returnStatus: true, script: "${toolbelt} org display --target-org ${SCRATCH_NAME}"
                     if (rc != 0) {
                         error 'Salesforce test scratch org display failed.'
                     }
