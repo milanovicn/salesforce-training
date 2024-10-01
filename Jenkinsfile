@@ -35,7 +35,7 @@ pipeline {
         stage('Create Test Scratch Org') {
             steps {
                 script {
-                    rc = command "${toolbelt} org create scratch --target-dev-hub HubOrg --set-default --definition-file config/project-scratch-def.json --alias testScratch --wait 10 --duration-days 1"
+                    rc = sh returnStatus: true, script: "${toolbelt} org create scratch --target-dev-hub ${HUB_ORG}  --set-default --definition-file config/project-scratch-def.json --alias testScratch --wait 10 --duration-days 1"
                     if (rc != 0) {
                         error 'Salesforce test scratch org creation failed.'
                     }
