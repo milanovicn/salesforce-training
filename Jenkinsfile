@@ -24,19 +24,14 @@ pipeline {
                 withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
                     echo "*** Authorizing hub org ***"
                     script {
-                        rc = sh returnStatus: true, script: "${toolbelt} auth:jwt:grant -i ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} -f ${jwt_key_file} -r ${SFDC_HOST} -d"
-                        if (rc != 0) { 
-                            println 'Return code not 0'
-                            error 'Hub org authorization failed' 
+                        rc = sh returnStatus: true, script: "${toolbelt} org login jwt --client-id ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwt-key-file ${jwt_key_file} --instance-url ${SFDC_HOST}  --set-default-dev-hub"
+                        if (rc != 0) {
+                            error 'Salesforce dev hub org authorization failed.'
                         }
-                        else {
-                            println 'Hub org authorization successful'
-                        }
-                        print 'rc value:'
-                        println rc
                     }
                 }
             }
         }
+        
     }
 }
