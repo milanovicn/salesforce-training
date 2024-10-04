@@ -7,9 +7,10 @@ pipeline {
         CONNECTED_APP_CONSUMER_KEY = "${env.CONNECTED_APP_CONSUMER_KEY_DH}"
         toolbelt = tool 'sf_cli'
         SCRATCH_NAME = "${env.JOB_NAME}_${env.BUILD_ID}"
+        TEST_LEVEL = 'RunLocalTests'
     }
     stages {
-        stage("List variables") {
+        stage('List variables') {
             steps {
                     sh"""
                         echo "*** Printig variables ***"
@@ -18,6 +19,7 @@ pipeline {
                         echo "JWT_KEY_CRED_ID: $JWT_KEY_CRED_ID"
                         echo "CONNECTED_APP_CONSUMER_KEY: $CONNECTED_APP_CONSUMER_KEY"
                         echo "SCRATCH_NAME: $SCRATCH_NAME"
+                        echo "TEST_LEVEL: $TEST_LEVEL"
                     """
             }
         }
@@ -61,6 +63,17 @@ pipeline {
                     rc = sh returnStatus: true, script: "${toolbelt} project deploy start --target-org ${SCRATCH_NAME}"
                     if (rc != 0) {
                         error 'Salesforce push to test scratch org failed.'
+                    }
+                }
+            }
+        }
+        stage('Run Tests In Test Scratch Org') {
+            steps {
+                script {
+                    echo '*** Running Tests ***'
+                    rc = sh returnStatus: true, script: "${toolbelt} apex run test --target-org ${SCRATCH_NAME} --wait 10 --result-format tap --code-coverage --test-level ${TEST_LEVEL}"
+                    if (rc != 0) {
+                        error 'Salesforce unit test run in test scratch org failed.'
                     }
                 }
             }
